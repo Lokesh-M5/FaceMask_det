@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Result — MaskGuard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">🛡️</span>
+        <span class="logo-text">MaskGuard</span>
+      </div>
+      <p class="header-sub">AI-Powered Face Mask Detection</p>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="card result-card">
+
+      <!-- Result Banner -->
+      <div class="result-banner {{ result.css_class }}">
+        <span class="result-icon">{{ result.icon }}</span>
+        <div class="result-text">
+          <h2>{{ result.label }}</h2>
+          <p>Confidence: <strong>{{ result.confidence }}%</strong></p>
+        </div>
+      </div>
+
+      <!-- Confidence Bar -->
+      <div class="conf-bar-wrap">
+        <div class="conf-bar-label">
+          <span>Detection Confidence</span>
+          <span>{{ result.confidence }}%</span>
+        </div>
+        <div class="conf-bar-track">
+          <div class="conf-bar-fill {{ result.css_class }}"
+               style="width: {{ result.confidence }}%"></div>
+        </div>
+      </div>
+
+      <!-- Uploaded Image -->
+      {% if img_b64 %}
+      <div class="result-image-wrap">
+        <img src="data:image/jpeg;base64,{{ img_b64 }}" alt="Analysed Image" class="result-image"/>
+      </div>
+      {% endif %}
+
+      <!-- Actions -->
+      <div class="result-actions">
+        <a href="{{ url_for('index') }}" class="btn-primary">🔄 Detect Another</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>MaskGuard &copy; 2025 &nbsp;|&nbsp; Powered by TensorFlow &amp; Flask</p>
+  </footer>
+
+</body>
+</html>

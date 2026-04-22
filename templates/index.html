@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mask Detection System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">🛡️</span>
+        <span class="logo-text">MaskGuard</span>
+      </div>
+      <p class="header-sub">AI-Powered Face Mask Detection</p>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Error Banner -->
+    {% if error %}
+    <div class="alert-error">⚠️ {{ error }}</div>
+    {% endif %}
+
+    <!-- Tab Switcher -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('upload', this)">📁 Upload Image</button>
+      <button class="tab-btn"        onclick="switchTab('webcam', this)">📷 Live Webcam</button>
+    </div>
+
+    <!-- ── TAB 1: Upload ── -->
+    <div id="tab-upload" class="tab-panel active">
+      <div class="card">
+        <h2 class="card-title">Upload an Image</h2>
+        <p class="card-desc">Supports JPG, PNG, JPEG. The model will detect whether a face mask is worn.</p>
+
+        <form method="post" action="{{ url_for('predict') }}" enctype="multipart/form-data" id="upload-form">
+
+          <div class="drop-zone" id="drop-zone">
+            <input type="file" name="image" id="file-input" accept="image/*" required hidden/>
+            <div class="drop-inner" id="drop-inner">
+              <div class="drop-icon">🖼️</div>
+              <p class="drop-text">Drag & drop your image here</p>
+              <p class="drop-sub">or</p>
+              <button type="button" class="btn-secondary" onclick="document.getElementById('file-input').click()">
+                Browse File
+              </button>
+            </div>
+            <img id="preview-img" class="preview-img hidden" alt="Preview"/>
+          </div>
+
+          <button type="submit" class="btn-primary" id="submit-btn">
+            <span>🔍 Detect Mask</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── TAB 2: Webcam ── -->
+    <div id="tab-webcam" class="tab-panel">
+      <div class="card">
+        <h2 class="card-title">Live Webcam Detection</h2>
+        <p class="card-desc">Allow camera access, then click <strong>Start Detection</strong> for real-time analysis.</p>
+
+        <div class="webcam-area">
+          <video id="webcam-video" autoplay playsinline></video>
+          <canvas id="webcam-canvas" hidden></canvas>
+          <div class="webcam-overlay" id="webcam-overlay">
+            <span>📷</span>
+            <p>Camera not started</p>
+          </div>
+        </div>
+
+        <!-- Result Badge (live) -->
+        <div class="live-result hidden" id="live-result">
+          <span id="live-icon"></span>
+          <span id="live-label"></span>
+          <span id="live-conf"></span>
+        </div>
+
+        <div class="webcam-controls">
+          <button class="btn-primary"   id="start-btn"  onclick="startWebcam()">▶ Start Detection</button>
+          <button class="btn-danger"    id="stop-btn"   onclick="stopWebcam()" disabled>⏹ Stop</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>MaskGuard &copy; 2025 &nbsp;|&nbsp; Powered by TensorFlow &amp; Flask</p>
+  </footer>
+
+  <script>
+    // Pass Flask URL to JS
+    const WEBCAM_URL = "{{ url_for('webcam') }}";
+  </script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
